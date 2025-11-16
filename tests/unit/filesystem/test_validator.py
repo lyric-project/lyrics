@@ -60,7 +60,7 @@ class TestPathValidator:
         assert "/test/skills" in validator.read_only_paths
         assert "/test/skills/public" in validator.read_only_paths
         assert "/test/workspace" in validator.read_write_paths
-        assert "/tmp" in validator.read_write_paths
+        # /tmp is no longer included by default to avoid conflicts with test setups
 
     def test_can_read_skills_file(self):
         """Test reading files in skills directory."""
@@ -218,7 +218,8 @@ class TestPathValidator:
         """Test read-write path detection."""
         # Test exact matches
         assert self.validator._is_path_in_read_write(self.workspace_path) is True
-        assert self.validator._is_path_in_read_write("/tmp") is True
+        # /tmp is no longer included by default to avoid conflicts with test setups
+        assert self.validator._is_path_in_read_write("/tmp") is False
 
         # Test subdirectories
         assert self.validator._is_path_in_read_write(self.workspace_file) is True
@@ -357,7 +358,8 @@ class TestPathValidator:
         # Allowed paths
         assert self.validator._is_path_allowed(self.skills_path) is True
         assert self.validator._is_path_allowed(self.workspace_path) is True
-        assert self.validator._is_path_allowed("/tmp") is True
+        # /tmp is no longer included by default to avoid conflicts with test setups
+        assert self.validator._is_path_allowed("/tmp") is False
 
         # Blocked paths
         assert self.validator._is_path_allowed("/etc") is False

@@ -44,13 +44,8 @@ Agent Skills need a secure bash environment to:
 ### Installation
 
 #### Option 1: Install from PyPI (Recommended)
-```bash
-# Install from PyPI
-pip install pylyrics
 
-# Or with UV
-uv add pylyrics
-```
+TODO
 
 #### Option 2: Install from Source (Development)
 ```bash
