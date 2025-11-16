@@ -45,7 +45,9 @@ Agent Skills need a secure bash environment to:
 
 #### Option 1: Install from PyPI (Recommended)
 
-TODO
+```bash
+pip install ailyrics
+```
 
 #### Option 2: Install from Source (Development)
 ```bash

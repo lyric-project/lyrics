@@ -1,5 +1,5 @@
 [project]
-name = "pylyrics"
+name = "ailyrics"
 version = "0.1.0"
 description = "Super connection middleware about multi-agent and skills"
 authors = [
