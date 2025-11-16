@@ -159,20 +159,30 @@ class ShellSessionManager:
 
                 stdout = "\n".join(lines).strip()
 
+                # Clean escape sequences more carefully
+                import re
+                # Only remove specific problematic sequences
+                stdout = re.sub(r'\x1b\[\?2004[hl]', '', stdout)
+                stdout = re.sub(r'\r', '', stdout)  # Remove carriage returns
+                stdout = stdout.strip()
+
                 # Get exit code
                 self.process.sendline("echo $?")
                 self.process.expect(self._prompt, timeout=5)
                 exit_code_output = self.process.before if self.process.before else "1"
 
-                # Parse exit code (it's the first line of output)
+                # Parse exit code (the last line should contain the exit code)
                 try:
                     exit_code_lines = exit_code_output.strip().split("\n")
-                    # Skip the echoed command, get the actual exit code
-                    exit_code = (
-                        int(exit_code_lines[-1].strip()) if exit_code_lines else 0
-                    )
-                except (ValueError, IndexError):
+                    # Find the line that contains just the exit code number
                     exit_code = 0
+                    for line in exit_code_lines:
+                        line = line.strip()
+                        if line.isdigit():
+                            exit_code = int(line)
+                            break
+                except (ValueError, IndexError):
+                    exit_code = 1  # Default to error if we can't parse
 
                 # Since we redirected stderr to stdout, we don't have separate stderr
                 # But we can simulate it by checking if the command failed
@@ -202,6 +212,7 @@ class ShellSessionManager:
             Current working directory path
         """
         try:
+            # Use a more reliable method to get pwd
             result = self.execute_command("pwd", timeout=5.0)
             if result.exit_code == 0 and result.stdout.strip():
                 path = result.stdout.strip()

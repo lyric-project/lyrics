@@ -35,12 +35,12 @@ help:
 # Container build
 docker-build:
 	@echo "📦 Building container image..."
-	@docker-compose -f docker-compose.test.yml build
+	@docker compose -f docker-compose.test.yml build
 
 # Start container services
 docker-up:
 	@echo "🚀 Starting container services..."
-	@docker-compose -f docker-compose.test.yml --profile testing up -d
+	@docker compose -f docker-compose.test.yml --profile testing up -d
 	@echo "⏳ Waiting for services to start..."
 	@sleep 3
 	@echo "✅ Container services started"
@@ -48,13 +48,13 @@ docker-up:
 # Stop container services
 docker-down:
 	@echo "🛑 Stopping container services..."
-	@docker-compose -f docker-compose.test.yml down
+	@docker compose -f docker-compose.test.yml down
 	@echo "✅ Container services stopped"
 
 # View container logs
 docker-logs:
 	@echo "📋 Viewing container logs..."
-	@docker-compose -f docker-compose.test.yml logs --tail=50 -f
+	@docker compose -f docker-compose.test.yml logs --tail=50 -f
 
 # Enter container shell
 docker-shell:
@@ -105,7 +105,7 @@ test:
 # Clean containers and images
 docker-clean:
 	@echo "🧹 Cleaning containers and images..."
-	@docker-compose -f docker-compose.test.yml down --rmi all --volumes
+	@docker compose -f docker-compose.test.yml down --rmi all --volumes
 	@echo "✅ Cleanup completed"
 
 # Quick restart
@@ -115,7 +115,7 @@ docker-restart: docker-down docker-up
 # Check container status
 docker-status:
 	@echo "📊 Container status:"
-	@docker-compose -f docker-compose.test.yml ps
+	@docker compose -f docker-compose.test.yml ps
 	@echo ""
 	@echo "🌐 Port mapping:"
 	@docker port lyrics-lyrics-test-1 2>/dev/null || echo "Container not running"
@@ -125,7 +125,7 @@ debug: docker-down docker-build docker-up
 	@echo "🔍 Starting debug mode..."
 	@sleep 3
 	@echo "📋 Container logs:"
-	@docker-compose -f docker-compose.test.yml logs --tail=20
+	@docker compose -f docker-compose.test.yml logs --tail=20
 	@echo ""
 	@echo "🏥 Quick health check:"
 	@$(MAKE) test-health

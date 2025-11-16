@@ -44,7 +44,7 @@ class PathValidator:
             os.path.join(self.skills_path, "public"),
         }
 
-        self.read_write_paths = {self.workspace_path, "/tmp", "/var/tmp", "/dev/shm"}
+        self.read_write_paths = {self.workspace_path}
 
         # Block dangerous paths
         self.blocked_paths = {
@@ -91,10 +91,11 @@ class PathValidator:
             if not os.path.exists(normalized_path):
                 return False
 
-            # Check if it's in a read-only or read-write path
+            # Check if it's in a read-only path (takes precedence)
             if self._is_path_in_read_only(normalized_path):
                 return True
 
+            # Check if it's in a read-write path
             if self._is_path_in_read_write(normalized_path):
                 return os.access(normalized_path, os.R_OK)
 
@@ -120,6 +121,10 @@ class PathValidator:
 
             # Check if path is blocked
             if self._is_path_blocked(normalized_path):
+                return False
+
+            # Check if it's in a read-only path (read-only takes precedence)
+            if self._is_path_in_read_only(normalized_path):
                 return False
 
             # Check if it's in a read-write path
@@ -220,6 +225,10 @@ class PathValidator:
             if self._is_path_blocked(normalized_path):
                 return False
 
+            # Check if it's in a read-only path (read-only takes precedence)
+            if self._is_path_in_read_only(normalized_path):
+                return False
+
             # Check if it's in a read-write path
             if self._is_path_in_read_write(normalized_path):
                 # Check parent directory permissions
@@ -286,6 +295,10 @@ class PathValidator:
         Returns:
             True if the path is in a read-write area
         """
+        # First check if it's a read-only path (read-only takes precedence)
+        if self._is_path_in_read_only(path):
+            return False
+
         # Check exact matches
         if path in self.read_write_paths:
             return True
