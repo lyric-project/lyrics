@@ -5,6 +5,7 @@ description = "Super connection middleware about multi-agent and skills"
 authors = [
     { name = "fangyinc", email = "staneyffer@gmail.com" }
 ]
+license = "MIT"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
