@@ -161,9 +161,10 @@ class ShellSessionManager:
 
                 # Clean escape sequences more carefully
                 import re
+
                 # Only remove specific problematic sequences
-                stdout = re.sub(r'\x1b\[\?2004[hl]', '', stdout)
-                stdout = re.sub(r'\r', '', stdout)  # Remove carriage returns
+                stdout = re.sub(r"\x1b\[\?2004[hl]", "", stdout)
+                stdout = re.sub(r"\r", "", stdout)  # Remove carriage returns
                 stdout = stdout.strip()
 
                 # Get exit code
